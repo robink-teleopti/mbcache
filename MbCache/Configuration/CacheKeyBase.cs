@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using MbCache.Core;
-using MbCache.Core.Events;
 using MbCache.Logic;
 
 namespace MbCache.Configuration
@@ -23,22 +22,13 @@ namespace MbCache.Configuration
 	[Serializable]
 	public abstract class CacheKeyBase : ICacheKey
 	{
-		private const string suspisiousParam =
-			"Cache key of type {0} equals its own type name. Possible bug in your ICacheKey implementation.";
-		private static readonly Regex findSeperator = new Regex(@"\" + separator, RegexOptions.Compiled);
+		private static readonly Regex findSeparator = new Regex(@"\" + separator, RegexOptions.Compiled);
 		private const string separator = "|";
 		private const string separatorForParameters = "$";
 
-		private IEnumerable<IEventListener> _eventListeners;
-
-		public void Initialize(IEnumerable<IEventListener> eventListeners)
-		{
-			_eventListeners = eventListeners;
-		}
-
 		public string RemoveKey(ComponentType type)
 		{
-			return type.ToString();
+			return type.TypeAsCacheKeyString;
 		}
 
 		public string RemoveKey(ComponentType type, ICachingComponent component)
@@ -61,7 +51,7 @@ namespace MbCache.Configuration
 				var parameterKey = ParameterValue(parameter);
 				if (parameterKey == null)
 					return null;
-				checkIfSuspiousParameter(parameter, parameterKey);
+				component.CheckIfSuspiciousParameter(parameter, parameterKey);
 				ret.Append(parameterKey);
 			}
 
@@ -96,23 +86,8 @@ namespace MbCache.Configuration
 
 		private static IEnumerable<string> allRemoveKeys(string getAndPutKey)
 		{
-			var matches = findSeperator.Matches(getAndPutKey);
+			var matches = findSeparator.Matches(getAndPutKey);
 			return from Match match in matches select string.Intern(getAndPutKey.Substring(0, match.Index));
-		}
-
-		private void checkIfSuspiousParameter(object parameter, string parameterKey)
-		{
-			if (parameter != null)
-			{
-				var parameterType = parameter.GetType();
-				if (parameterKey.Equals(parameterType.ToString()))
-				{
-					foreach (var eventListener in _eventListeners)
-					{
-						eventListener.Warning(string.Format(suspisiousParam, parameterType));
-					}
-				}
-			}
 		}
 
 		/// <summary>
@@ -130,7 +105,7 @@ namespace MbCache.Configuration
 		/// </summary>
 		/// <param name="parameter">The parameter.</param>
 		/// <returns>
-		/// A string reporesentation of the parameter.
+		/// A string representation of the parameter.
 		/// </returns>
 		protected abstract string ParameterValue(object parameter);
 	}

@@ -7,7 +7,7 @@ using SharpTestsEx;
 
 namespace MbCacheTest.Events.Statistic
 {
-	public class MultipleEventHandlers : FullTest
+	public class MultipleEventHandlers : TestCase
 	{
 		private eventListenerForMultiple firstEventListener;
 		private eventListenerForMultiple secondEventListener;
@@ -127,11 +127,6 @@ namespace MbCacheTest.Events.Statistic
 					FirstCallOnPut = false;
 					FirstPut = true;
 				}
-			}
-
-			public void Warning(string warnMessage)
-			{
-				throw new NotImplementedException();
 			}
 		}
 	}

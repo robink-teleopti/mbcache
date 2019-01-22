@@ -5,7 +5,7 @@ using SharpTestsEx;
 
 namespace MbCacheTest.Logic.Performance
 {
-	public class MemoryUsageTest : FullTest
+	public class MemoryUsageTest : TestCase
 	{
 		private ObjectWithMultipleParameters component;
 
@@ -22,7 +22,7 @@ namespace MbCacheTest.Logic.Performance
 		}
 
 		[Test]
-		public void ShouldLowerMemoryUsageCausedByKeyString()
+		public void MeasureMem()
 		{
 			const int uniqueCacheEntries = 10000;
 			var memUsageAtStart = GC.GetTotalMemory(true);
@@ -34,7 +34,7 @@ namespace MbCacheTest.Logic.Performance
 			var memUsage = GC.GetTotalMemory(true) - memUsageAtStart;
 			var mbUsage = memUsage / 1000 / 1000;
 			Console.WriteLine(mbUsage + "mb");
-			mbUsage.Should().Be.LessThan(22);
+			mbUsage.Should().Be.LessThan(21);
 		}
 	}
 }

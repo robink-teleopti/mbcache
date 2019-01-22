@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using MbCache.Configuration;
 using MbCache.Core;
-using MbCache.Core.Events;
 using MbCache.Logic;
 using MbCacheTest.TestData;
 using NUnit.Framework;
@@ -11,7 +10,7 @@ using SharpTestsEx;
 
 namespace MbCacheTest.Logic
 {
-	public class CacheKeyReturnNullTest : FullTest
+	public class CacheKeyReturnNullTest : TestCase
 	{
 		private cacheKeyStub cacheKey;
 
@@ -86,10 +85,6 @@ namespace MbCacheTest.Logic
 		private class cacheKeyStub : ICacheKey
 		{
 			public string TheKey { get; set; }
-
-			public void Initialize(IEnumerable<IEventListener> eventListeners)
-			{
-			}
 
 			public string RemoveKey(ComponentType type)
 			{

@@ -6,7 +6,7 @@ using SharpTestsEx;
 
 namespace MbCacheTest.Logic
 {
-	public class InvalidateCacheTest : FullTest
+	public class InvalidateCacheTest : TestCase
 	{
 		private IMbCacheFactory factory;
 
@@ -160,7 +160,7 @@ namespace MbCacheTest.Logic
 		}
 
 		[Test]
-		public void InvalideAllByExplicitCall()
+		public void InvalidateAllByExplicitCall()
 		{
 			var obj = factory.Create<IObjectReturningNewGuids>();
 			var value = obj.CachedMethod();

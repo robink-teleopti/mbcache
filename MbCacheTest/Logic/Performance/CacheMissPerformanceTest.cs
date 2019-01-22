@@ -8,7 +8,7 @@ using SharpTestsEx;
 
 namespace MbCacheTest.Logic.Performance
 {
-	public class CacheMissPerformanceTest : FullTest
+	public class CacheMissPerformanceTest : TestCase
 	{
 		private ObjectTakes100MsToFill instance;
 		
@@ -27,7 +27,7 @@ namespace MbCacheTest.Logic.Performance
 		}
 		
 		[Test]
-		[Ignore("To be fixed")]
+		[Ignore("Fix by using smarter/slimmer lock in InMemoryCache")]
 		public void MeasureCacheMissPerf()
 		{
 			var tasks = new List<Task>();

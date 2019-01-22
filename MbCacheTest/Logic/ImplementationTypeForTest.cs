@@ -5,8 +5,7 @@ using SharpTestsEx;
 
 namespace MbCacheTest.Logic
 {
-	[TestFixture(typeof(ProxyImplThatThrowsNotSupportedEx))]
-	public class ImplementationTypeForTest : SimpleTest
+	public class ImplementationTypeForTest : TestCase
 	{
 		public ImplementationTypeForTest(Type proxyType) : base(proxyType)
 		{

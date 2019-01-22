@@ -11,19 +11,22 @@ namespace MbCache.Logic
 		private readonly CacheAdapter _cache;
 		private readonly ICacheKey _cacheKey;
 		private readonly ComponentType _componentType;
+		private readonly bool _allowDifferentArgumentsShareSameCacheKey;
+		private readonly string suspiciousParam =
+			"Cache key of type {0} equals its own type name. You should specify a value for this parameter in your ICacheKey implementation." + Environment.NewLine +
+			"However, even though it's not recommended, you can override this exception by calling AllowDifferentArgumentsShareSameCacheKey when configuring your cached component.";
 
-		public CachingComponent(CacheAdapter cache,
-										ICacheKey cacheKey,
-										ConfigurationForType configurationForType)
+		public CachingComponent(ConfigurationForType configurationForType)
 		{
-			_cache = cache;
-			_cacheKey = cacheKey;
+			_cacheKey = configurationForType.CacheKey;
 			_componentType = configurationForType.ComponentType;
+			_cache = configurationForType.CacheAdapter;
 			UniqueId = configurationForType.CachePerInstance ? Guid.NewGuid().ToString() : "Global";
+			_allowDifferentArgumentsShareSameCacheKey = configurationForType.AllowDifferentArgumentsShareSameCacheKey;
 		}
 
 		public string UniqueId { get; }
-
+		
 		public void Invalidate()
 		{
 			var cacheKey = _cacheKey.RemoveKey(_componentType, this);
@@ -44,6 +47,16 @@ namespace MbCache.Logic
 				key = _cacheKey.RemoveKey(_componentType, this, methodInfo);
 			}
 			_cache.Delete(key);
+		}
+		
+		public void CheckIfSuspiciousParameter(object parameter, string parameterKey)
+		{
+			if (_allowDifferentArgumentsShareSameCacheKey || parameter == null) 
+				return;
+			if (parameterKey.Equals(parameter.GetType().ToString()))
+			{
+				throw new ArgumentException(string.Format(suspiciousParam, parameterKey), parameterKey);
+			}
 		}
 	}
 }

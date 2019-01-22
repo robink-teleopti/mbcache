@@ -6,7 +6,7 @@ using SharpTestsEx;
 
 namespace MbCacheTest.Logic.Scope
 {
-	public class CachePerScopeTest : FullTest
+	public class CachePerScopeTest : TestCase
 	{
 		private IMbCacheFactory factory;
 
@@ -18,7 +18,7 @@ namespace MbCacheTest.Logic.Scope
 		{
 			CacheBuilder.For<ReturningRandomNumbers>()
 				 .CacheMethod(c => c.CachedNumber())
-				 .CacheKey(new CacheKeyWithScope())
+				 .OverrideCacheKey(new CacheKeyWithScope())
 				 .As<IReturningRandomNumbers>();
 
 			factory = CacheBuilder.BuildFactory();

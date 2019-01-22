@@ -7,7 +7,7 @@ using SharpTestsEx;
 
 namespace MbCacheTest.Logic.Scope
 {
-	public class CacheKeyForComponentOverridingTest : FullTest
+	public class CacheKeyForComponentOverridingTest : TestCase
 	{
 		private IMbCacheFactory factory;
 
@@ -25,7 +25,7 @@ namespace MbCacheTest.Logic.Scope
 		{
 			CacheBuilder.For<ReturningRandomNumbers>()
 				 .CacheMethod(c => c.CachedNumber())
-				 .CacheKey(new ToStringCacheKey())
+				 .OverrideCacheKey(new ToStringCacheKey())
 				 .As<IReturningRandomNumbers>();
 
 			factory = CacheBuilder.BuildFactory();

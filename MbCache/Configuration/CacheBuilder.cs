@@ -31,24 +31,28 @@ namespace MbCache.Configuration
 		public IMbCacheFactory BuildFactory()
 		{
 			checkAllImplementationAndMethodsAreOk();
-			if (_cache == null)
-			{
-				_cache = new InMemoryCache(20);
-			}
-			setCacheKeysAndInit();
-			var events = new EventListenersCallback(_eventListeners);
-			_cache.Initialize(events);
-			return new MbCacheFactory(_proxyFactory, new CacheAdapter(_cache), _configuredTypes);
+			setCacheAndCacheKeys();
+			return new MbCacheFactory(_proxyFactory, _configuredTypes);
 		}
 
-		private void setCacheKeysAndInit()
+		private void setCacheAndCacheKeys()
 		{
 			var defaultCacheKey = new ToStringCacheKey();
+			var events = new EventListenersCallback(_eventListeners);
+			var defaultCache = new InMemoryCache(TimeSpan.FromMinutes(20));
+			var allCaches = new HashSet<ICache>();
+			
 			foreach (var configurationForType in _configuredTypes.Values)
 			{
 				if (configurationForType.CacheKey == null)
+				{
 					configurationForType.CacheKey = _cacheKey ?? defaultCacheKey;
-				configurationForType.CacheKey.Initialize(_eventListeners);
+				}
+				configurationForType.CreateCacheAdapter(_cache ?? defaultCache, allCaches);
+			}
+			foreach (var cache in allCaches)
+			{
+				cache.Initialize(events);
 			}
 		}
 
@@ -57,7 +61,7 @@ namespace MbCache.Configuration
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
-		public IFluentBuilder<T> For<T>()
+		public FluentBuilder<T> For<T>()
 		{
 			return For<T>(null);
 		}
@@ -70,7 +74,7 @@ namespace MbCache.Configuration
 		/// </param>
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
-		public IFluentBuilder<T> For<T>(string typeAsCacheKey)
+		public FluentBuilder<T> For<T>(string typeAsCacheKey)
 		{
 			var concreteType = typeof(T);
 			var details = new ConfigurationForType(concreteType, typeAsCacheKey);
@@ -78,7 +82,6 @@ namespace MbCache.Configuration
 			var fluentBuilder = new FluentBuilder<T>(this, _configuredTypes, details);
 			return fluentBuilder;
 		}
-
 
 		private void checkAllImplementationAndMethodsAreOk()
 		{

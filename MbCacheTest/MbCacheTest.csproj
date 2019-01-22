@@ -43,7 +43,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,7 +51,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.5.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
@@ -81,10 +79,16 @@
     <Compile Include="Events\Statistic\MultipleEventHandlers.cs" />
     <Compile Include="Events\Statistic\PutTest.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Logic\AllowDifferentArgumentsShareSameCacheKeyTest.cs" />
     <Compile Include="Logic\CachedMethodCalledFromWithinSameClassTest.cs" />
+    <Compile Include="Logic\CacheForComponentOverridingTest.cs" />
     <Compile Include="Logic\CacheKeyBaseReturnNullTest.cs" />
     <Compile Include="Logic\Concurrency\RecursiveMethodsTest.cs" />
+    <Compile Include="Logic\InitializeCacheOnceTest\CacheWithInitializeCounter.cs" />
+    <Compile Include="Logic\InitializeCacheOnceTest\CallingDefaultCacheInitializeOnceTest.cs" />
+    <Compile Include="Logic\InitializeCacheOnceTest\CallingOverridenCacheInitializeOnceTest.cs" />
     <Compile Include="Logic\Performance\CacheMissPerformanceTest.cs" />
+    <Compile Include="Logic\Performance\MemoryUsageWithLargeParameterTest.cs" />
     <Compile Include="Logic\Scope\CacheKeyForComponentOverridingTest.cs" />
     <Compile Include="Logic\Scope\CacheKeyThatThrows.cs" />
     <Compile Include="Logic\Scope\CacheKeyWithScope.cs" />
@@ -115,7 +119,7 @@
     <Compile Include="Logic\CachingPerInstanceTest.cs" />
     <Compile Include="Logic\ClassProxy\NonVirtualTest.cs" />
     <Compile Include="Logic\ClassProxy\SimpleCacheAndInvalidationTest.cs" />
-    <Compile Include="Logic\Concurrency\SimultaniousCachePutTest.cs" />
+    <Compile Include="Logic\Concurrency\SimultaneousCachePutTest.cs" />
     <Compile Include="Logic\ImplementationTypeForTest.cs" />
     <Compile Include="Logic\InvalidateCachePerInstanceTest.cs" />
     <Compile Include="Logic\InvalidateCacheTest.cs" />
@@ -124,11 +128,9 @@
     <Compile Include="Logic\SameParameterNamesTest.cs" />
     <Compile Include="Logic\SimpleCacheTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProxyImplThatThrowsNotSupportedEx.cs" />
     <Compile Include="Events\Statistic\HitsAndMissesTest.cs" />
     <Compile Include="Events\Statistic\ThreadingTest.cs" />
-    <Compile Include="SimpleTest.cs" />
-    <Compile Include="FullTest.cs" />
+    <Compile Include="TestCase.cs" />
     <Compile Include="TestData\ObjectCallingMethodOnItSelf.cs" />
     <Compile Include="TestData\ObjectRecursive.cs" />
     <Compile Include="TestData\ObjectTakes100msToFill.cs" />
@@ -141,7 +143,6 @@
     <Compile Include="TestData\ObjectWithGenericMethodParameters.cs" />
     <Compile Include="TestData\ObjectWithIdentifier.cs" />
     <Compile Include="TestData\ObjectWithMultipleParameters.cs" />
-    <Compile Include="TestData\ObjectWithParameterReturningFixedValue.cs" />
     <Compile Include="TestData\ObjectWithOverloadedMethod.cs" />
     <Compile Include="TestData\ObjectWithProperty.cs" />
     <Compile Include="TestData\ReturningRandomNumbers.cs" />
@@ -186,7 +187,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
